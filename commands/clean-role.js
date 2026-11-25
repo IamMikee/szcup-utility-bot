@@ -102,6 +102,16 @@ module.exports = {
                         }
                     }
 
+                    // Player role
+                    const playerRoleId = process.env.PLAYER_ROLE_ID;
+                    if (playerRoleId && member.roles.cache.has(playerRoleId)) {
+                        try {
+                            await member.roles.remove(playerRoleId);
+                        } catch (e) {
+                            result.errors.push(`player role from <@${discordId}>: ${e.message}`);
+                        }
+                    }
+
                     // Game role — only if no other verifications for a same-game ticket remain
                     if (gameRole && member.roles.cache.has(gameRole.id) && game) {
                         const userVers = await db

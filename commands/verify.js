@@ -131,7 +131,9 @@ module.exports = {
       await guild.roles.fetch();
       const gameRole = await getOrCreateRole(guild, game);
       const ticketRole = await getOrCreateRole(guild, ticketCode);
-      await member.roles.add([gameRole, ticketRole]);
+      const rolesToAdd = [gameRole, ticketRole];
+      if (process.env.PLAYER_ROLE_ID) rolesToAdd.push(process.env.PLAYER_ROLE_ID);
+      await member.roles.add(rolesToAdd);
 
       // 8. Verification doc
       try {
