@@ -7,7 +7,7 @@ const {
   getPlayerNamesFromForm,
   getGameFromForm,
 } = require('../lib/form');
-const { getOrCreateRole } = require('../lib/roles');
+const { getOrCreateRole, ticketRoleNameFor } = require('../lib/roles');
 const { audit, reportError } = require('../lib/audit');
 
 function errorEmbed(message) {
@@ -130,7 +130,7 @@ module.exports = {
       }
       await guild.roles.fetch();
       const gameRole = await getOrCreateRole(guild, game);
-      const ticketRole = await getOrCreateRole(guild, ticketCode);
+      const ticketRole = await getOrCreateRole(guild, ticketRoleNameFor(ticketCode, formData));
       const rolesToAdd = [gameRole, ticketRole];
       if (process.env.PLAYER_ROLE_ID) rolesToAdd.push(process.env.PLAYER_ROLE_ID);
       await member.roles.add(rolesToAdd);
@@ -164,6 +164,18 @@ module.exports = {
         } catch (e) {
           await reportError(client, `verify: check-in ticket ${ticketCode}`, e);
         }
+      }
+
+      // 9b. Nickname -> registered real name (Discord caps nicknames at 32 chars).
+      //     Best-effort: the server owner and members above the bot can't be renamed.
+      try {
+        await member.setNickname(matchedName.slice(0, 32), 'AZHEN verify');
+      } catch (e) {
+        console.error(`[verify] could not set nickname for ${interaction.user.id}:`, e.message);
+        await audit(
+          client,
+          `⚠️ [VERIFY] Could not set nickname for <@${interaction.user.id}> to "${matchedName}": ${e.message}`
+        );
       }
 
       // 10. Reply

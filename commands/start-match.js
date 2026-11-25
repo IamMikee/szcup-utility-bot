@@ -15,6 +15,7 @@ const colors = require('../config/colors');
 const { requireAdmin } = require('../lib/guards');
 const { audit, reportError } = require('../lib/audit');
 const { newMatchId, vcName: buildVcName, matchRoleName: buildRoleName } = require('../lib/match');
+const { findTicketRole } = require('../lib/roles');
 
 const COLLECTOR_TIME = 180_000;
 const ID_RE = /\d{17,20}/g;
@@ -76,8 +77,8 @@ module.exports = {
 
     // ---- Preconditions ----
     await guild.roles.fetch();
-    const ticketRoleA = guild.roles.cache.find((r) => r.name === teamA);
-    const ticketRoleB = guild.roles.cache.find((r) => r.name === teamB);
+    const ticketRoleA = await findTicketRole(guild, teamA);
+    const ticketRoleB = await findTicketRole(guild, teamB);
     if (!ticketRoleA) {
       return interaction.reply({ content: `No players verified for ticket ${teamA} yet.` });
     }

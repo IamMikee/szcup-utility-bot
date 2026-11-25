@@ -4,6 +4,7 @@ const colors = require('../config/colors');
 const { requireAdmin } = require('../lib/guards');
 const { audit, reportError } = require('../lib/audit');
 const { getFormResponseData, getGameFromForm } = require('../lib/form');
+const { findTicketRole } = require('../lib/roles');
 
 async function gameForTicket(ticketCode) {
     const snap = await db.collection('tickets').doc(ticketCode).get();
@@ -78,7 +79,7 @@ module.exports = {
 
             // ---- Resolve roles ----
             await guild.roles.fetch();
-            const ticketRole = guild.roles.cache.find((r) => r.name === ticketCode) ?? null;
+            const ticketRole = await findTicketRole(guild, ticketCode);
             const game = await gameForTicket(ticketCode);
             const gameRole = game ? guild.roles.cache.find((r) => r.name === game) ?? null : null;
 
