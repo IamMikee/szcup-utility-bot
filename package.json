@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node .",
     "deploy": "node deploy-commands.js",
-    "seed": "node seed-tickets.js"
+    "seed": "node dupe-ticket.js"
   },
   "engines": {
     "node": ">=18"

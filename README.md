@@ -29,14 +29,16 @@
 - [Node.js](https://nodejs.org/) v18 or higher
 - A Discord Bot Application with **Server Members Intent** enabled in the Discord Developer Portal
 - A Firebase project with Firestore enabled and a Service Account key
+- Bot permissions: **Manage Roles**, **Manage Channels**, **Manage Nicknames**, **Move Members** (to disconnect players from voice)
+- The bot's role must sit **above** the player, team and game roles in Server Settings → Roles. Nicknames can't be changed for the server owner or anyone ranked above the bot.
 
 ### 2. Installation
 
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/your-username/szcup-bot.git
-cd szcup-bot
+git clone https://github.com/IamMikee/szcup-utility-bot.git
+cd szcup-utility-bot
 npm install
 ```
 
@@ -49,8 +51,10 @@ DISCORD_TOKEN=your_discord_bot_token
 DISCORD_CLIENT_ID=your_application_client_id
 DISCORD_GUILD_ID=your_target_server_id
 
-# Single-line JSON string of your Firebase Service Account credentials
-FIREBASE_SERVICE_ACCOUNT={"type":"service_account","project_id":"...","private_key":"...","client_email":"..."}
+# Firebase Service Account credentials (copy from the service account JSON)
+FIREBASE_PROJECT_ID=your_firebase_project_id
+FIREBASE_CLIENT_EMAIL=your_service_account_client_email
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 
 # Discord Role & Channel IDs
 ADMIN_ROLE_ID=role_id_for_bot_admins
@@ -64,7 +68,7 @@ GAME_ANSWER_ID=ansGameId
 TEAM_NAME_ID=ansTeamNameId   # optional; team role falls back to the ticket code
 ```
 
-> **Note**: `FIREBASE_SERVICE_ACCOUNT` must be formatted as a valid single-line JSON string. Do not commit `.env` or service account files to version control.
+> **Note**: `FIREBASE_PRIVATE_KEY` must stay on one line, with `\n` for line breaks. Do not commit `.env` or service account files to version control.
 
 ### 4. Deploy Commands & Run
 
@@ -74,7 +78,7 @@ Register the slash commands to your Discord server (guild-scoped for instant ava
 npm run deploy
 ```
 
-*(Optional)* Seed test ticket and form response data into Firestore for local QA:
+*(Optional)* Create, clone or delete test tickets and form responses in Firestore for local QA (`dupe-ticket.js`, interactive):
 
 ```bash
 npm run seed
@@ -95,7 +99,7 @@ Available to all members in the server.
 
 | Command | Usage | Description |
 | :--- | :--- | :--- |
-| **`/verify`** | `/verify [full name] [ticket code]` | Verifies a registered player (ephemeral response), assigns their Game and Team roles, and marks the ticket checked in. Name must match registration spelling. |
+| **`/verify`** | `/verify [full name] [ticket code]` | Verifies a registered player (ephemeral response), assigns their Game role, Team role and the `PLAYER_ROLE_ID` role, sets their server nickname to their registered name, and marks the ticket checked in. The Team role is named `TEAM_NAME-TICKET_CODE` (just the ticket code if the registration has no team name). Name must match registration spelling. |
 | **`/check-ticket`** | `/check-ticket [ticket code]` | Displays a team's game, bracket stage, match record, and roster verification status (`✅` verified / `⬜` unverified). |
 | **`/check-player`** | `/check-player [@user]` | Displays all teams a user is verified for along with their tournament stage and match history. |
 
@@ -114,7 +118,7 @@ Restricted to users with the configured `ADMIN_ROLE_ID` (or granted via `/admin`
 | :--- | :--- | :--- |
 | **`/win`** | `/win [ticket code] [promote-to-qf]` | Records a win. Use `promote-to-qf: true` to advance from qualifiers to quarterfinals; subsequent wins advance through semifinals to finalist and post announcements. |
 | **`/lose`** | `/lose [ticket code]` | Records a loss, marks the team as eliminated, and posts an elimination announcement. |
-| **`/clean-role`** | `/clean-role [ticket code] [@user]` | Resets verification records and removes team/game roles for a specific player (or the entire team if `@user` is omitted) so they can re-verify. Blocked during active matches. |
+| **`/clean-role`** | `/clean-role [ticket code] [@user]` | Resets verification records and removes the player, team and game roles for a specific player (or the entire team if `@user` is omitted) so they can re-verify. Blocked during active matches. |
 | **`/admin`** | `/admin [@user]` | Toggles bot admin access for a user. Includes safeguards against self-demotion, bot promotion, and removing the last admin. |
 
 ---
@@ -149,8 +153,9 @@ szcup-utility-bot/
 │   ├── names.js
 │   └── roles.js
 ├── deploy-commands.js        # Guild slash-command registration script
+├── .env.example              # Template for required environment variables
 ├── index.js                  # Application entry point
-├── dupe-ticket.js           # Firestore QA data seeding script (create, clone, delete)
+├── dupe-ticket.js            # Firestore QA ticket script (create, clone, delete)
 └── package.json
 ```
 
