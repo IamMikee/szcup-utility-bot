@@ -21,7 +21,7 @@ module.exports = {
   async execute(client) {
     // 1-2. Status + log
     client.user.setPresence({
-      activities: [{ name: "SZCUP '26", type: ActivityType.Watching }],
+      activities: [{ name: "SZCUP '26", type: ActivityType.Competing }],
       status: 'online',
     });
     console.log(`AZHEN online as ${client.user.tag}`);
