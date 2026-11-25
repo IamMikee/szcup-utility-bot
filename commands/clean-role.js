@@ -210,7 +210,7 @@ module.exports = {
                 `• Verifications deleted: ${result.deleted}`,
                 `• Ticket roles removed: ${result.tickets}`,
                 `• Game roles removed: ${result.games}`,
-                `• Fully cleaned: ${fullyCleaned}${fullyCleaned && ticketRole ? ` (deleted role ${ticketCode})` : ''}`,
+                `• Fully cleaned: ${fullyCleaned}${fullyCleaned && ticketRole ? ` (deleted role ${ticketRole.name})` : ''}`,
             ];
             if (result.errors.length) {
                 auditLines.push(`• Errors: ${result.errors.length} (see console)`);

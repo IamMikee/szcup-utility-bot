@@ -56,10 +56,12 @@ FIREBASE_SERVICE_ACCOUNT={"type":"service_account","project_id":"...","private_k
 ADMIN_ROLE_ID=role_id_for_bot_admins
 AUDIT_CHANNEL_ID=channel_id_for_audit_logs
 ANNOUNCEMENT_CHANNEL_ID=channel_id_for_bracket_announcements
+PLAYER_ROLE_ID=role_id_given_to_every_verified_player
 
 # Firestore Form Mapping
 NAME_ANSWER_IDS=ansId1,ansId2,ansId3
 GAME_ANSWER_ID=ansGameId
+TEAM_NAME_ID=ansTeamNameId   # optional; team role falls back to the ticket code
 ```
 
 > **Note**: `FIREBASE_SERVICE_ACCOUNT` must be formatted as a valid single-line JSON string. Do not commit `.env` or service account files to version control.
