@@ -120,7 +120,7 @@ Restricted to users with the configured `ADMIN_ROLE_ID` (or granted via `/admin`
 ## 🗂️ Project Structure
 
 ```text
-azhen-bot/
+szcup-utility-bot/
 ├── commands/                 # Slash command definitions and handlers
 │   ├── admin.js
 │   ├── check-player.js
