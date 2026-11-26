@@ -119,6 +119,8 @@ Restricted to users with the configured `ADMIN_ROLE_ID` (or granted via `/admin`
 | **`/win`** | `/win [ticket code] [promote-to-qf]` | Records a win. Use `promote-to-qf: true` to advance from qualifiers to quarterfinals; subsequent wins advance through semifinals to finalist and post announcements. |
 | **`/lose`** | `/lose [ticket code]` | Records a loss, marks the team as eliminated, and posts an elimination announcement. |
 | **`/clean-role`** | `/clean-role [ticket code] [@user]` | Resets verification records and removes the player, team and game roles for a specific player (or the entire team if `@user` is omitted) so they can re-verify. Blocked during active matches. |
+| **`/reset-bracket`** | `/reset-bracket [ticket code]` | Resets a team's bracket to the start (qualifiers, not eliminated, no match history). Verifications and roles are untouched. |
+| **`/view-teams-list`** | `/view-teams-list` | Lists every team as team name, ticket code and game, 10 per page with Previous/Next buttons. Lets admins find a team's ticket code for `/start-match`, `/win`, `/lose`, `/clean-role` and `/reset-bracket`. The list is posted publicly, so run it in an admin-only channel. |
 | **`/admin`** | `/admin [@user]` | Toggles bot admin access for a user. Includes safeguards against self-demotion, bot promotion, and removing the last admin. |
 
 ---
@@ -134,9 +136,11 @@ szcup-utility-bot/
 │   ├── clean-role.js
 │   ├── finish-match.js
 │   ├── lose.js
+│   ├── reset-bracket.js
 │   ├── set-match-vc-channel.js
 │   ├── start-match.js
 │   ├── verify.js
+│   ├── view-teams-list.js
 │   └── win.js
 ├── config/
 │   └── colors.js             # Standardized embed hex colors
