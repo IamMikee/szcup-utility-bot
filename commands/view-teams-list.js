@@ -16,7 +16,7 @@ const PAGE_SIZE = 10;
 const COLLECTOR_TIME = 180_000;
 const TEAM_W = 24;
 const CODE_W = 8;
-const GAME_W = 16;
+const GAME_W = 20;
 
 const fit = (text, width) => {
   const t = String(text).replace(/`/g, "'");
